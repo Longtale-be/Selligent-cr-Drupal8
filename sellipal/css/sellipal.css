@@ -1,0 +1,20 @@
+.toolbar-icon-sellipal-admin:before { background-image: url(../misc/icons/selligent_logo.svg); }
+.sellipal-edit, .sellipal-delete { position: relative; color: transparent; }
+.sellipal-edit:active, .sellipal-delete:active {color: transparent; }
+.sellipal-edit:hover, .sellipal-edit:focus, .sellipal-delete:hover, .sellipal-delete:focus { color: transparent; }
+.sellipal-edit:before { background-image: url(../misc/icons/edit.svg); }
+.sellipal-delete:before { background-image: url(../misc/icons/delete.svg); }
+.sellipal-edit:before, .sellipal-delete:before { 
+	position: absolute;
+    top: 0;
+    left: 0.6667em;
+    display: block;
+    width: 16px;
+    height: 100%;
+    content: "";
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: center center;
+    background-size: 100% auto;
+}

@@ -1,0 +1,17 @@
+# Version: 0.1
+# Name of the module
+name: Sellipal
+# Module detailed description
+description: Module used to render Selligent pages into a Drupal website.
+# Specify in which module group the module will be displayed on page /admin/modules.
+package: Selligent
+# Specify that it is a module. Options: (module, theme, profile).
+type: module
+# key that defines the core version. This is a required attribute
+core: 8.x
+configure: sellipal.config
+# There can alse be these values:
+# dependencies - the list of modules our module depends on.
+# test_dependencies - the list of modules that will be enabled when running automated tests.
+# hidden: TRUE - the option hides this module from the list of modules.
+# To show all hidden modules in the list, you should specify $settings['extension_discovery_scan_tests'] = TRUE в settings.php.

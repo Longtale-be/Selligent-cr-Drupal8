@@ -1,0 +1,5 @@
+global-styling:
+  version: 0.1
+  css:
+    theme:
+      css/sellipal.css: {}

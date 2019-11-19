@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Default implementation of our Selligent content renderer template.
+ *
+ * Available variables:
+ * - head: The head information retreived from the Selligent page
+ * - head_class: The class name used for the wrapping div
+ * - head_show: Decides if the head div will be rendered
+ * - body: The body information retreived from the Selligent page
+ * - body_class: The class name used for the wrapping div
+ * - body_show: Decides if the body div will be rendered
+ */
+#} 
+{% if head and head_show == "1" %}
+  <div class="{{ head_class }}">{{ head }}</div>
+{% endif %}
+{% if body and body_show == "1" %}
+  <div class="{{ body_class }}">{{ body }}</div>
+{% endif %}

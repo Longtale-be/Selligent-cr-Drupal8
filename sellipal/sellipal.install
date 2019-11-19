@@ -1,0 +1,105 @@
+<?php
+function sellipal_schema() {
+	$schema['sellipal'] = array (
+		'description' => 'Stores the different pages to content render.',
+		'fields' => array(
+			'id' => array(
+				'description' => 'The primary identifier for the record',
+				'type' => 'serial',
+				'unsigned' => TRUE,
+				'not null' => TRUE,
+			),
+			'created_dt' => array(
+				'description' => 'Timestamp of when the record was created',
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => 0,
+			),
+			'name' => array(
+				'description' => 'A name used to identify this record',
+				'type' => 'varchar',
+				'length' => 150,
+				'not null' => TRUE,
+				'default' => '',
+			),
+			'hash' => array(
+				'description' => 'The hash of the Selligent page used to fetch it from the Selligent platform',
+				'type' => 'varchar',
+				'length' => 250,
+				'not null' => TRUE,
+				'default' => '',
+			),
+			'page_url' => array(
+				'description' => 'The route the user wants to use inside Drupal, ex: "contact" becomes /page/contact',
+				'type' => 'varchar',
+				'length' => 150,
+				'not null' => FALSE,
+				'default' => '',
+			),
+			'dynamic_url' => array(
+				'description' => 'Indicates if we need to use dynamic URLs, 0 = No, 1 = Yes',
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => '0',
+			),
+			'head_class' => array(
+				'description' => 'The class-name used on the div that wraps the Selligent head tag content',
+				'type' => 'varchar',
+				'length' => 250,
+				'default' => '',
+			),
+			'head_show' => array(
+				'description' => 'Indicates if we should render the head content from the Selligent page',
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => '0',
+			),
+			'body_class' => array(
+				'description' => 'The class-name used on the div that wraps the Selligent body tag content',
+				'type' => 'varchar',
+				'length' => 250,
+				'default' => '',
+			),
+			'body_show' => array(
+				'description' => 'Indicates if we should render the body content from the Selligent page',
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => '0',
+			),
+			'cr_type' => array(
+				'description' => 'Indicates if we should render the content from the Selligent page as a page or block. 0 = Page, 1 = Block',
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => '0',
+			),
+			'lang_param' => array(
+				'description' => 'The parameter name used to push the language to Selligent',
+				'type' => 'varchar',
+				'length' => 150,
+				'not null' => FALSE,
+				'default' => '',
+			),
+			'client_url' => array(
+				'description' => 'The url of the Selligent platform: https://client.slgnt.eu',
+				'type' => 'varchar',
+				'length' => 250,
+				'default' => '',
+			),
+			'enabled' => array(
+				'description' => 'Indicates if the page/block is enabled or not (visitable)',
+				'type' => 'int',
+				'not null' => TRUE,
+				'default' => '0',
+			),
+		),
+		'primary key' => array('id'),
+		'unique keys' => array(
+		    'page_url' => array('page_url'),
+		 ),
+		'indexes' => array(
+			'name' => array('page_url'),
+			'name_id' => array('page_url','id'),
+		),
+	);
+	return $schema;
+}

@@ -1,0 +1,42 @@
+# Configuration routing administer site configuration
+sellipal.config:
+  path: '/admin/config/sellipal'
+  defaults:
+    _form: '\Drupal\sellipal\Form\SellipalConfigForm'
+    _title: 'Sellipal Configuration'
+  requirements:
+    _permission: 'administer sellipal'
+
+# Delete hash record routing
+sellipal.delete_record:
+  path: '/admin/config/sellipal/delete/{hid}'
+  defaults:
+    _form: '\Drupal\sellipal\Form\SellipalDeleteForm'
+    _title: 'Delete record'
+  requirements:
+    _access: 'TRUE'
+    _permission: 'administer sellipal delete'
+
+# Edit hash record routing
+sellipal.edit_record:
+  path: '/admin/config/sellipal/edit/{hid}'
+  defaults:
+    _form: '\Drupal\sellipal\Form\SellipalEditForm'
+    _title: 'Edit record'
+  requirements:
+    _access: 'TRUE'
+    _permission: 'administer sellipal edit'
+
+# Add hash record routing
+sellipal.add_record:
+  path: '/admin/config/sellipal/add'
+  defaults:
+    _form: '\Drupal\sellipal\Form\SellipalAddForm'
+    _title: 'Add record'
+  requirements:
+    _access: 'TRUE'
+    _permission: 'administer sellipal add'
+
+# Dynamic routes
+route_callbacks:
+    - '\Drupal\sellipal\Routing\sellipalRoutes::routes'

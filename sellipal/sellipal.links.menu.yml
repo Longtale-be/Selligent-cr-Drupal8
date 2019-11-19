@@ -1,0 +1,6 @@
+sellipal.admin:
+  title: 'Sellipal'
+  description: 'Sellipal admin settings page link'
+  parent: system.admin
+  route_name: sellipal.config
+  weight: 100

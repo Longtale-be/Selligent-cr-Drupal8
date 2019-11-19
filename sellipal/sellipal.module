@@ -1,0 +1,131 @@
+<?php
+
+/*
+ * ============LICENSE_START=============================================================================================================
+ * Copyright (c) 2019 Longtale.
+ * ===================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ * ============LICENSE_END===============================================================================================================
+ * 
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_theme().
+ *
+ * This hook lets us register template files in Drupal 8 that can then be used to render various content with the help of a template file.
+ *
+ * @see https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/group/themeable/8.2.x
+ */
+ function sellipal_theme() {
+ 	return [
+ 		'sellipal' => [
+ 			'variables' => [
+ 				'head' => null,
+ 				'head_class' => null,
+ 				'head_show' => null,
+ 				'body' => null,
+ 				'body_class' => null,
+ 				'body_show' => null,
+ 			],
+ 		],
+ 	];
+ }
+
+ /**
+ * Implements hook_toolbar_alter().
+ */
+function sellipal_toolbar_alter(&$items) {
+	$items['administration']['#attached']['library'][] = 'sellipal/global-styling';
+}
+
+/**
+ * Implements hook_help().
+ */
+function sellipal_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.sellipal':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Sellipal is a content rendering module for the Selligent platform. It allows you to create pages and blocks inside a Drupal website that can be pointed to Selligent journeys. Sellipal comes with some extra functionality that allows the end-user to easily create a new connection with the Selligent platform. Sellipal uses a database to store all the different hashes the routing linked to them, users are able to add, edit and delete these records.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+
+      $output .= '<dt>' . t('Set default install URL') . '</dt>';
+      $output .= '<dd>' . t('You can set the default install URL of your install on the <a href=":default_url">Sellipal configuration page</a>. This URL will be used in case no other install URL was found on the requested record.', [':default_url' => Url::fromRoute('sellipal.config')->toString()]) . '</dd>';
+
+      $output .= '<dt>' . t('Set default parameter') . '</dt>';
+      $output .= '<dd>' . t('You can set the default Selligent ID parameter on the <a href=":default_url">Sellipal configuration page</a>. This parameter will be used on the Drupal system to capture the Selligent hash.', [':default_url' => Url::fromRoute('sellipal.config')->toString()]) . '</dd>';
+
+      $output .= '<dt>' . t('Set default language parameter') . '</dt>';
+      $output .= '<dd>' . t('You can set the default language parameter on the <a href=":default_url">Sellipal configuration page</a>. This parameter will be used to pass the Drupal language to the Selligent platform.', [':default_url' => Url::fromRoute('sellipal.config')->toString()]) . '</dd>';
+
+      $output .= '<dt>' . t('Set default hash') . '</dt>';
+      $output .= '<dd>' . t('You can set the default hash on the <a href=":default_url">Sellipal configuration page</a>. This hash will be used in case no other hash was found on the requested record.', [':default_url' => Url::fromRoute('sellipal.config')->toString()]) . '</dd>';
+
+      $output .= '<dt>' . t('Set default head class') . '</dt>';
+      $output .= '<dd>' . t('You can set the default head class on the <a href=":default_url">Sellipal configuration page</a>. This class name will be placed on the div that wraps the head tag content from the Selligent platform. We are not placing the head content inside the Drupal head tag.', [':default_url' => Url::fromRoute('sellipal.config')->toString()]) . '</dd>';
+
+      $output .= '<dt>' . t('Set default body class') . '</dt>';
+      $output .= '<dd>' . t('You can set the default body class on the <a href=":default_url">Sellipal configuration page</a>. This class name will be placed on the div that wraps the body tag content from the Selligent platform.', [':default_url' => Url::fromRoute('sellipal.config')->toString()]) . '</dd>';
+
+      $output .= '<dt>' . t('Insert a new page / block record') . '</dt>';
+      $output .= '<dd>' . t('You can create new pages and blocks with Selligent content on the <a href=":default_url">Sellipal add page</a>. This option allows you to add a new page / block to your Drupal website.', [':default_url' => Url::fromRoute('sellipal.add_record')->toString()]) . '</dd>';
+
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Name') . '</dt>';
+      $output .= '<dd>' . t('Set the name of the record') . '</dd>';
+
+      $output .= '<dt>' . t('Display type') . '</dt>';
+      $output .= '<dd>' . t('Set the type of the record to page or block') . '</dd>';
+
+      $output .= '<dt>' . t('Install URL') . '</dt>';
+      $output .= '<dd>' . t('Set the install URL (https://client.slgnt.eu), in case you have multiple install URLs setting this option will overwrite the default install URL.') . '</dd>';
+
+      $output .= '<dt>' . t('Selligent hash') . '</dt>';
+      $output .= '<dd>' . t('Set hash for this page / block, the hash can be found in the Selligent journey.') . '</dd>';
+
+      $output .= '<dt>' . t('Language parameter') . '</dt>';
+      $output .= '<dd>' . t('Set the language parameter for this record, this will overwrite the default language parameter.') . '</dd>';
+
+      $output .= '<dt>' . t('Routing name') . '</dt>';
+      $output .= '<dd>' . t('Set the routing for this page, Sellipal will create a new routing on the following location: /page/your_routing_name.') . '</dd>';
+
+      $output .= '<dt>' . t('Head class-name') . '</dt>';
+      $output .= '<dd>' . t('Set the head class for the div that will wrap the head tag content from the Selligent platform. Setting this option will overwrite the default head class name.') . '</dd>';
+
+      $output .= '<dt>' . t('Body class-name') . '</dt>';
+      $output .= '<dd>' . t('Set the body class for the div that will wrap the body tag content from the Selligent platform. Setting this option will overwrite the default body class name.') . '</dd>';
+
+      $output .= '<dt>' . t('Render head content') . '</dt>';
+      $output .= '<dd>' . t('Setting this option will allow Sellipal to render the head tag content from the Selligent platform onto your page / block.') . '</dd>';
+
+      $output .= '<dt>' . t('Render body content') . '</dt>';
+      $output .= '<dd>' . t('Setting this option will allow Sellipal to render the body tag content from the Selligent platform onto your page / block.') . '</dd>';
+
+      $output .= '<dt>' . t('Dynamic URLs') . '</dt>';
+      $output .= '<dd>' . t('Setting this option will allow Sellipal to change the Selligent optiext URLs into URLs with the current domain instead of the Selligent domain. This method can also be used in case you are unable to set the content renderer on the properties of the Selligent journey.') . '</dd>';
+
+      $output .= '<dt>' . t('Enable') . '</dt>';
+      $output .= '<dd>' . t('Setting this option will make sure Sellipal renders the Selligent content, if disabled the end-user will see a page not found error.') . '</dd>';
+
+      $output .= '</dl>';
+
+      $output .= '<dt>' . t('Edit the page / block record') . '</dt>';
+      $output .= '<dd>' . t('You can edit pages and blocks with Selligent content on the <a href=":default_url">Sellipal config page</a>. This option allows you to edit pages / blocks. The options are the same as the insert functionality.', [':default_url' => Url::fromRoute('sellipal.config')->toString()]) . '</dd>';
+
+      $output .= '<dt>' . t('Delete the page / block record') . '</dt>';
+      $output .= '<dd>' . t('You can delete pages and blocks with Selligent content on the <a href=":default_url">Sellipal config page</a>. This option allows you to delete pages / blocks.', [':default_url' => Url::fromRoute('sellipal.config')->toString()]) . '</dd>';
+
+      $output .= '</dl>';
+
+      return $output;
+  }
+}

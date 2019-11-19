@@ -1,0 +1,7 @@
+sellipal:
+  xml_url: ''
+  get_param: 'ID'
+  get_lang_param: 'LANG'
+  default_hash: ''
+  default_div_class_head: 'selligent-head'
+  default_div_class_body: 'selligent-body'

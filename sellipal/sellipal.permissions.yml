@@ -1,0 +1,19 @@
+view sellipal:
+  title: 'View Selligent content'
+  description: 'View pages / blocks rendered by Sellipal'
+administer sellipal:
+  title: 'Administer Sellipal settings'
+  description: 'Access the Sellipal administrative settings page'
+  restrict access: true
+administer sellipal add:
+  title: 'Add records'
+  description: 'Create new records in the Sellipal database'
+  restrict access: true
+administer sellipal edit:
+  title: 'Edit records'
+  description: 'Edit records in the Sellipal database'
+  restrict access: true
+administer sellipal delete:
+  title: 'Delete records'
+  description: 'Delete records in the Sellipal database'
+  restrict access: true
