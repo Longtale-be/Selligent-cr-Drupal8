@@ -206,7 +206,7 @@ class sellipalController extends ControllerBase {
 				// Check if ID is not empty
 				(!isset($_GET[$selligentGetParam])) ? $selligentID = $selligentID : $selligentID =  urlencode($_GET[$selligentGetParam]);
 				// Remove $temp_test_vars after testing
-				$full_url = $selligentCustomer . $renderer_url . "?id=". $selligentID . $parameters;
+				$full_url = $selligentCustomer . $renderer_url . "?" . $selligentGetParam . "=". $selligentID . $parameters;
 				// Check if LANG PARAM is not empty
 				(empty($language_param)) ?$full_url = $full_url : $full_url =  $full_url . "&" . $language_param . "=" . $language;
 				// Fetch XML from the Selligent server
