@@ -244,7 +244,7 @@ class sellipalController extends ControllerBase {
 							$messagent_body = str_replace($selligentCustomer . "/optiext/optiextension.dll",  $protocol . $domainName . $selligentCustomer . "/" .basename($_SERVER['PHP_SELF']), $messagent_body);
 						}
 						// Return information from Selligent
-						return $this->create_function($messagent_head,$head_class,$head_show,$messagent_body,$body_class,$body_show);
+						return $this->createArray($messagent_head,$head_class,$head_show,$messagent_body,$body_class,$body_show);
 					}
 				}
 				
