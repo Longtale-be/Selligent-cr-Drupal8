@@ -238,15 +238,14 @@ class sellipalController extends ControllerBase {
 						if((string) $record['dynamic_url'] === "1") {
 							// In case of SMC (replace all the URL to our own URL): 
 							// Check the protocol of the domain
-					    	$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-					    	// Get the domain name
-					    	$domainName = $_SERVER['HTTP_HOST'].'/';
-							$messagent_body = str_replace($selligentCustomer . "/optiext/optiextension.dll",  $protocol . $domainName . $selligentCustomer . "/" .basename($_SERVER['PHP_SELF']), $messagent_body);
+					    		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+					    	
+							$messagent_body = str_replace($selligentCustomer . "/optiext/optiextension.dll", $protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"], $messagent_body);
 						}
 						// Return information from Selligent
 						return $this->createArray($messagent_head,$head_class,$head_show,$messagent_body,$body_class,$body_show);
 					}
-				}
+				}	
 				
 			}
 			else {
