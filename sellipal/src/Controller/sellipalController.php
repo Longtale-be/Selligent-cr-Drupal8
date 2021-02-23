@@ -31,6 +31,8 @@ class sellipalController extends ControllerBase {
 	* @return array
 	*/
 	public function render($page_name) {
+		// Avoid caching pages
+		\Drupal::service('page_cache_kill_switch')->trigger();
 		$result = $this->fetchContent($page_name, 0);
 		return $this->renderArray($result);	
 	}
@@ -41,6 +43,8 @@ class sellipalController extends ControllerBase {
 	* @return array
 	*/
 	public function renderBlock($page_name) {
+		// Avoid caching pages
+		\Drupal::service('page_cache_kill_switch')->trigger();
 		$result = $this->fetchContent($page_name, 1);
 		return $this->renderArray($result);	
 	}
@@ -54,12 +58,12 @@ class sellipalController extends ControllerBase {
 		return [
 			'#title' => '',
 			'#theme' => 'sellipal',
-			'#head' => $this->t((string) $result['head']),
-			'#head_class' => $this->t((string) $result['head_class']),
-			'#head_show' => $this->t((string) $result['head_show']),
-      		'#body' => $this->t((string) $result['body']), 
-      		'#body_class' => $this->t((string) $result['body_class']),
-      		'#body_show' => $this->t((string) $result['body_show']),
+			'#head' => $result['head'],
+			'#head_class' => $result['head_class'],
+			'#head_show' => $result['head_show'],
+      		'#body' => $result['body'],
+      		'#body_class' => $result['body_class'],
+      		'#body_show' => $result['body_show'],
 		];
 	}
 
@@ -211,22 +215,23 @@ class sellipalController extends ControllerBase {
 				(empty($language_param)) ?$full_url = $full_url : $full_url =  $full_url . "&" . $language_param . "=" . $language;
 				// Fetch XML from the Selligent server
 				$selligentPage =  @simplexml_load_file($full_url);
-				// Check if we could reach te Selligent platform and/or the XML is empty
-				if(empty($selligentPage)) {
-					// Faulty return array, drupal will still show address lookup failure errors visible for public
-					// We could also throw a page not found here
-					return $this->createArray('',(string) $settings['default_div_class_head'],'1','We could not load the page, please check the config settings.',(string) $settings['default_div_class_body'],1);
+
+				// Start redirect fix
+				$location = "";
+				foreach ($http_response_header as $hdr) {
+				    if (preg_match('/^Location:\s*([^;]+)/', $hdr, $matches)) { $location = $matches[1]; }
+				}
+				// Check if the location field is present in the header, if so we need to redirect to this location. If not display content of page.
+				if (!empty($location)) {
+					header("Location: " . $location);
+					exit();
 				}
 				else {
-					// Fetch the header information from the call to the Selligent server
-					$location = "";
-					foreach ($http_response_header as $hdr) {
-					    if (preg_match('/^Location:\s*([^;]+)/', $hdr, $matches)) { $location = $matches[1]; }
-					}
-					// Check if the location field is present in the header, if so we need to redirect to this location. If not display content of page.
-					if (!empty($location)) {
-						header("Location: " . $location);
-						exit();
+					// Check if we could reach te Selligent platform and/or the XML is empty
+					if(empty($selligentPage)) {
+						// Faulty return array, drupal will still show address lookup failure errors visible for public
+						// We could also throw a page not found here
+						return $this->createArray('',(string) $settings['default_div_class_head'],'1','We could not load the page, please check the config settings.',(string) $settings['default_div_class_body'],1);
 					}
 					else {
 						// Found a specific character in the output, removing it from the data.
@@ -236,17 +241,26 @@ class sellipalController extends ControllerBase {
 						$messagent_body = str_replace('&#8203;','',trim((string) $selligentPage->body));
 						// User now has the power to adjust this
 						if((string) $record['dynamic_url'] === "1") {
-							// In case of SMC (replace all the URL to our own URL): 
+							/// In case of SMC (replace all the URL to our own URL): 
 							// Check the protocol of the domain
-					    		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-					    	
-							$messagent_body = str_replace($selligentCustomer . "/optiext/optiextension.dll", $protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"], $messagent_body);
+							$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+							// Remove the parameters from url
+							$url_no_param = explode('?', $_SERVER['REQUEST_URI'], 2)[0];
+							// Change URLs with dynamic URLs
+							$messagent_body = str_replace(rtrim($selligentCustomer,"/") . "/optiext/optiextension.dll",  $protocol . $_SERVER["HTTP_HOST"] . $url_no_param , $messagent_body);
+
+
+
+							// Paths scripts
+							$messagent_body = str_replace("../scripts/",rtrim($selligentCustomer,"/") . "/scripts/", $messagent_body);
+							$messagent_head = str_replace("../scripts/",rtrim($selligentCustomer,"/") . "/scripts/", $messagent_head);
+							// Path Images
+							$messagent_body = str_replace("../images/",rtrim($selligentCustomer,"/") . "/images/", $messagent_body);
 						}
 						// Return information from Selligent
 						return $this->createArray($messagent_head,$head_class,$head_show,$messagent_body,$body_class,$body_show);
-					}
-				}	
-				
+					}	
+				}
 			}
 			else {
 				// Return empty page in case not all data was present.
