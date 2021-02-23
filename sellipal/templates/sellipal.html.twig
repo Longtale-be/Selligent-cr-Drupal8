@@ -13,8 +13,8 @@
  */
 #} 
 {% if head and head_show == "1" %}
-  <div class="{{ head_class }}">{{ head }}</div>
+  <div class="{{ head_class|raw }}">{{ head|raw }}</div>
 {% endif %}
 {% if body and body_show == "1" %}
-  <div class="{{ body_class }}">{{ body }}</div>
+  <div class="{{ body_class|raw }}">{{ body|raw }}</div>
 {% endif %}
