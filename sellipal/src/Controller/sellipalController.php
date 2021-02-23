@@ -258,7 +258,7 @@ class sellipalController extends ControllerBase {
 							$messagent_body = str_replace("../images/",rtrim($selligentCustomer,"/") . "/images/", $messagent_body);
 						}
 						// Return information from Selligent
-						return $this->createArray($messagent_head,$head_class,$head_show,$messagent_body . $selligentID,$body_class,$body_show);
+						return $this->createArray($messagent_head,$head_class,$head_show,$messagent_body,$body_class,$body_show);
 					}	
 				}
 			}
