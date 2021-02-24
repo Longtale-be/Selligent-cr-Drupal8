@@ -60,6 +60,7 @@ class SellipalEditForm extends FormBase {
       '#default_value' => (isset($record['name']) && $this->id) ? $record['name']:'',
       '#description' => t('<strong>Note:</strong> The name will be used to identify a block'), 
       '#required' => TRUE,
+      '#maxlength' => 150,
     );
 
     $form['cr_type'] = array(
@@ -80,6 +81,7 @@ class SellipalEditForm extends FormBase {
       '#description' => t('Example: https://clientname.slgnt.eu or https://clientname.emsecure.net<br/><strong>Note:</strong> This will overwrite the default setting.'), 
       '#default_value' => (isset($record['client_url']) && $this->id) ? $record['client_url']:'',
       '#required' => FALSE,
+      '#maxlength' => 250,
     );
 
     $form['page_hash'] = array(
@@ -89,6 +91,7 @@ class SellipalEditForm extends FormBase {
       '#default_value' => (isset($record['hash']) && $this->id) ? $record['hash']:'',
       '#description' => $this->t('This hash will be used to fetch the Selligent page'),
       '#required' => TRUE,
+      '#maxlength' => 250,
     );
 
     $form['lang_param'] = array(
@@ -98,13 +101,25 @@ class SellipalEditForm extends FormBase {
       '#description' => t('Parameter used to pass the language to the Selligent platform'), 
       '#default_value' => (isset($record['lang_param']) && $this->id) ? $record['lang_param']:'',
       '#required' => FALSE,
+      '#maxlength' => 150,
     );
+
+     /* START: Added for Roles */
+    $form["page_role_select"] = array(
+      "#type" => "checkboxes", 
+      "#title" => t("Select role access"), 
+      '#default_value' => (isset($record['page_role_select']) && $this->id) ? explode("||", $record['page_role_select']):'',
+      "#options" => user_role_names(),
+      "#description" => t("The selected roles will have access to this Selligent page, when no option is selected all roles will have access"),
+    );
+    /* END: Added for Roles */
 
     $form['page_url'] = array(
       '#type' => 'textfield',
       '#size' => 100,
       '#title' => $this->t('Routing name for the page'),
       '#default_value' => (isset($record['page_url']) && $this->id) ? $record['page_url']:'',
+      '#maxlength' => 150,
       '#description' => t('This name will be used for dynamic routing in Drupal. No need to add / before te name.<br/><strong>Note:</strong> URL will look like: /page/your_routing_name'),
       '#states' => [
         'visible' => [
@@ -123,6 +138,7 @@ class SellipalEditForm extends FormBase {
       '#default_value' => (isset($record['head_class']) && $this->id) ? $record['head_class']:'',
       '#description' => t('This class-name will be placed on the div that will wrap the head content from the Selligent page'),
       '#required' => FALSE,
+      '#maxlength' => 250,
     );
 
     $form['body_class'] = array(
@@ -132,6 +148,7 @@ class SellipalEditForm extends FormBase {
       '#default_value' => (isset($record['body_class']) && $this->id) ? $record['body_class']:'',
       '#description' => t('This class-name will be placed on the div that will wrap the body content from the Selligent page'),
       '#required' => FALSE,
+      '#maxlength' => 250,
     );
 
     $form['head_show'] = array(
@@ -193,6 +210,11 @@ class SellipalEditForm extends FormBase {
     $client_url=$field['client_url'];
     $enabled=$field['enabled'];
 
+    /* START: Added for Roles */
+    $results = implode('||', array_filter($field['page_role_select']));
+    $roles=$results;
+    /* END: Added for Roles */
+
     if(empty($url)) {
       $url = $record_id;
     }
@@ -210,6 +232,9 @@ class SellipalEditForm extends FormBase {
         'lang_param' => $lang_param,
         'client_url' => $client_url,
         'enabled' => $enabled,
+        /* START: Added for Roles */
+        'page_role_select' => $roles,
+        /* END: Added for Roles */
     );
 
     $conn = \Drupal::database();
