@@ -140,7 +140,7 @@ class sellipalController extends ControllerBase {
 		$param = "";
 		foreach($data as $name => $value) {
 			if(strtoupper($name)<>$selli_param) {
-				$param = $param . "&" . $name . "=" . urlencode($value);
+				$param = $param . "&" . $name . "=" . urlencode(strip_tags($value));
 			}
 		}
 		return $param;
