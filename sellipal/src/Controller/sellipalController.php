@@ -196,7 +196,10 @@ class sellipalController extends ControllerBase {
     		// The record is empty so we're going to give access to all
     		$userAccess = TRUE;
     	}
-
+    	// Access only for pages atm
+    	if($d_type === 1) {
+    		$userAccess = TRUE;
+    	}
     	/* END: Added for Roles */
 
 		if((string) $record['enabled'] == "0") {
