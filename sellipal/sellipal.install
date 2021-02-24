@@ -91,6 +91,13 @@ function sellipal_schema() {
 				'not null' => TRUE,
 				'default' => '0',
 			),
+			'page_role_select' => array(
+				'description' => 'The roles that have access to this record (machinenames, delimiter used is ||)',
+				'type' => 'varchar',
+				'length' => 500,
+				'not null' => FALSE,
+				'default' => '',
+			),
 		),
 		'primary key' => array('id'),
 		'unique keys' => array(

@@ -19,6 +19,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\Node;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UnexpectedValueException;
+/* START: Added for Roles */
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+/* END: Added for Roles */
 
 /**
  * The Selligent content renderer template controller.
@@ -169,10 +172,43 @@ class sellipalController extends ControllerBase {
 		$settings = $this->getSettings();
 		$record = $this->getRecord($page_name, $d_type);
 
+		/* START: Added for Roles */
+		$userCurrent = \Drupal::currentUser(); // Get current User
+		$user = user_load($userCurrent->id()); // Load the current user
+    	$roles = $user->getRoles(); // Get the roles linked to the current roles (machine names)
+
+    	$recordRoles = "";
+    	$userAccess = FALSE;
+
+    	// Get the role settings of current record
+    	if(!empty($record['page_role_select'])){ 
+    		$recordRoles = explode("||", (string) $record['page_role_select']); 
+
+    		// Loop over Array 
+	    	for ($i = 0; $i < count($roles); $i++) {
+	    		if(in_array($roles[$i], $recordRoles)) {
+	    			// If we have a match with one of the roles we're going to set the access to TRUE
+			    	$userAccess = TRUE;
+			    }
+			}
+    	}
+    	else {
+    		// The record is empty so we're going to give access to all
+    		$userAccess = TRUE;
+    	}
+
+    	/* END: Added for Roles */
+
 		if((string) $record['enabled'] == "0") {
 			// Throw page not found in case the record is not enabled
 			throw new NotFoundHttpException();
 		}
+		/* START: Added for Roles */
+		else if ($userAccess === FALSE) {
+			// Throw page access denied
+			throw new AccessDeniedHttpException();
+		}
+		/* END: Added for Roles */
 		else {
 			// If the record is enabled we're going to fetch the page from the Selligent platform
 	    	$hash_ = (string) $settings['default_hash'];
